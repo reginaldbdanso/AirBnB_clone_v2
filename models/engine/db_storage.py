@@ -49,26 +49,19 @@ class DBStorage:
         from models.amenity import Amenity
         from models.place import Place
         from models.review import Review
+        from models import classes
 
-        classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
-        if cls is None:
-            objs = self.__session.query(User).all()
-            objs += self.__session.query(State).all()
-            objs += self.__session.query(City).all()
-            objs += self.__session.query(Amenity).all()
-            objs += self.__session.query(Place).all()
-            objs += self.__session.query(Review).all()
+        objs = {}
+        if cls:
+            for obj in self.__session.query(classes[cls]):
+                key = '{}.{}'.format(cls, obj.id)
+                objs[key] = obj
         else:
-            objs = self.__session.query(classes[cls]).all()
-        new_dict = {}
-        for obj in objs:
-            key = obj.__class__.__name__ + '.' + obj.id
-            new_dict[key] = obj
-        return new_dict
+            for cls in classes.values():
+                for obj in self.__session.query(cls):
+                    key = '{}.{}'.format(cls.__name__, obj.id)
+                    objs[key] = obj
+        return objs
 
     def new(self, obj):
         """
