@@ -2,6 +2,11 @@
 """This module is a db_storage engine """
 import os
 
+mysql_user = os.environ.get('HBNB_MYSQL_USER')
+mysql_pwd = os.environ.get('HBNB_MYSQL_PWD')
+mysql_host = os.environ.get('HBNB_MYSQL_HOST')
+mysql_db = os.environ.get('HBNB_MYSQL_DB')
+
 
 class DBStorage:
     """This class manages storage of hbnb models in JSON format"""
@@ -22,10 +27,10 @@ class DBStorage:
 
         self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'.format(
-                HBNB_MYSQL_USER,
-                HBNB_MYSQL_PWD,
-                HBNB_MYSQL_HOST,
-                HBNB_MYSQL_DB
+                mysql_user,
+                mysql_pwd,
+                mysql_host,
+                mysql_db
                 ),
                 pool_pre_ping=True
                 )
