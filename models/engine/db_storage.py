@@ -6,6 +6,7 @@ mysql_user = os.environ.get('HBNB_MYSQL_USER')
 mysql_pwd = os.environ.get('HBNB_MYSQL_PWD')
 mysql_host = os.environ.get('HBNB_MYSQL_HOST')
 mysql_db = os.environ.get('HBNB_MYSQL_DB')
+mysql_env = os.environ.get('HBNB_ENV')
 
 
 class DBStorage:
@@ -31,11 +32,12 @@ class DBStorage:
                 mysql_pwd,
                 mysql_host,
                 mysql_db
-                ),
-                pool_pre_ping=True
+                ), pool_pre_ping=True
                 )
+        if mysql_env == 'test':
+            Base.metadata.drop_all(self.__engine)
         Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine)
+        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(Session)
 
     def all(self, cls=None):
@@ -77,7 +79,7 @@ class DBStorage:
 
     def save(self):
         """
-        Saves storage dictionary(commit changes to 
+        Saves storage dictionary(commit changes to
         current database session)
         """
         self.__session.commit()
