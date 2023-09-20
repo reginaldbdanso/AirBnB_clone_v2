@@ -113,18 +113,45 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    # def do_create(self, args):
+    #     """ Create an object of any class"""
+    #     if not args:
+    #         print("** class name missing **")
+    #         return
+    #     elif args not in HBNBCommand.classes:
+    #         print("** class doesn't exist **")
+    #         return
+    #     new_instance = HBNBCommand.classes[args]()
+    #     storage.save()
+    #     print(new_instance.id)
+    #     storage.save()
+
     def do_create(self, args):
-        """ Create an object of any class"""
+        """Create a new instance of a class with given parameters"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        args_list = args.split()
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
+        class_attrs = HBNBCommand.classes[class_name].__dict__
+        new_instance = HBNBCommand.classes[class_name]()
+        for arg in args_list[1:]:
+            key_val = arg.split('=')
+            if len(key_val) != 2:
+                continue
+            key, val = key_val
+            if val[0] == '"' and val[-1] == '"' and val.count('"') == 2:
+                val = val[1:-1].replace('_', ' ')
+                setattr(new_instance, key, val)
+            elif '.' in val and all(c.isdigit() or c == '.' for c in val):
+                setattr(new_instance, key, float(val))
+            elif val.isdigit():
+                setattr(new_instance, key, int(val))
+        new_instance.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
