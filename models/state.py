@@ -23,7 +23,7 @@ class State(BaseModel, Base):
     @property
     def cities(self):
         """
-        Getter attribute cities that returns the list of 
+        Getter attribute cities that returns the list of
         City instances with state_id equals to the current State.id
         """
         list_cities = []

@@ -61,8 +61,7 @@ class Place(BaseModel, Base):
         nullable=True
         )
 
-    longitude =
-    Column(
+    longitude = Column(
         Float,
         nullable=True
         )
