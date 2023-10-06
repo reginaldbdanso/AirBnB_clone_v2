@@ -30,6 +30,7 @@ def do_pack():
 def do_deploy(archive_path):
     """Distributes an archive to the web servers"""
     if not os.path.exists(archive_path):
+        print("File doesn't exist")
         return False
 
     try:
@@ -72,10 +73,11 @@ def do_deploy(archive_path):
         run(
             "ln -s /data/web_static/releases/{}/ /data/web_static/current"
             .format(folder_name))
-
+        print("New version deployed!")
         return True
 
     except Exception as e:
+        print(e)
         return False
 
 
@@ -83,5 +85,7 @@ def deploy():
     """Creates and distributes an archive to the web servers"""
     archive_path = do_pack()
     if not archive_path:
+        print("Archive not created")
         return False
+    print("Deploying new version...")
     return do_deploy(archive_path)
