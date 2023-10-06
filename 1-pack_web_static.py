@@ -14,8 +14,8 @@ def do_pack():
 
         # Create the file name
         now = datetime.now()
-        file_name = f"web_static_{now.year}{now.month}{now.day}{now.hour}" +
-        f"{now.minute}{now.second}.tgz"
+        file_name = f"web_static_{now.year}{now.month}{now.day}{now.hour}"
+        + f"{now.minute}{now.second}.tgz"
 
         # Create the archive
         local("tar -cvzf versions/{file_name} web_static")
