@@ -39,7 +39,8 @@ def do_deploy(archive_path):
         run(f'mv {old} {new}')
 
         # run(
-        #     "mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/"
+        #     "mv /data/web_static/releases/{}/web_static/* 
+        # /data/web_static/releases/{}/"
         #     .format(folder_name, folder_name))
         # Delete empty folder after moving content
         run("rm -rf /data/web_static/releases/{}/web_static".format(
