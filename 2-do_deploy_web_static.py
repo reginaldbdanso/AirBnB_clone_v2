@@ -21,7 +21,10 @@ def do_deploy(archive_path):
         # Uncompress the archive to the folder
         # /data/web_static/releases/<archive filename without extension>
         # on the web server
+
+        # get the archive file name
         file_name = archive_path.split("/")[-1]
+        # get the folder name without the extension
         folder_name = file_name.split(".")[0]
         run("mkdir -p /data/web_static/releases/{}/".format(folder_name))
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
@@ -29,6 +32,17 @@ def do_deploy(archive_path):
 
         # Delete the archive from the web server
         run("rm /tmp/{}".format(file_name))
+        # move all the files to parent folder
+        old = "/data/web_static/releases/{}/web_static/*".format(folder_name)
+        new = "/data/web_static/releases/{}/".format(folder_name)
+        run(f'mv {old} {new}')
+
+        # run(
+        #     "mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/"
+        #     .format(folder_name, folder_name))
+        # Delete empty folder after moving content
+        run("rm -rf /data/web_static/releases/{}/web_static".format(
+            folder_name))
 
         # Delete symbolic link /data/web_static/current from the web server
         run("rm -rf /data/web_static/current")
