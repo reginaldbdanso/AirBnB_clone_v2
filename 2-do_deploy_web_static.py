@@ -34,12 +34,12 @@ def do_deploy(archive_path):
         # Delete the archive from the web server
         run("rm /tmp/{}".format(file_name))
         # move all the files to parent folder
-        old = f"/data/web_static/releases/{folder_name}/web_static/*"
+        old = "/data/web_static/releases/{}/web_static/*".format(folder_name)
         new = "/data/web_static/releases/{}/".format(folder_name)
         run("mv {} {}".format(old, new))
 
         # run(
-        #     "mv /data/web_static/releases/{}/web_static/* 
+        #     "mv /data/web_static/releases/{}/web_static/*
         # /data/web_static/releases/{}/"
         #     .format(folder_name, folder_name))
         # Delete empty folder after moving content
