@@ -4,6 +4,7 @@ using the function deploy
 """
 from fabric.api import *
 from os.path import exists
+from datetime import datetime
 import os
 
 env.hosts = ['34.232.68.72', '52.90.13.69']
@@ -22,6 +23,7 @@ def do_pack():
         local("tar -cvzf versions/{} web_static".format(file_name))
         return "versions/{}".format(file_name)
     except Exception as e:
+        print(e)
         return None
 
 
