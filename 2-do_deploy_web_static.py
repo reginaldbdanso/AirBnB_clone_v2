@@ -19,7 +19,8 @@ def do_deploy(archive_path):
         # Upload the archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
         # copy the archive to the tmp folder in the local machine
-        local("cp {} /tmp/".format(archive_path))
+        if local("cp {} /tmp/".format(archive_path)).failed is True:
+            return False
 
         # Uncompress the archive to the folder
         # /data/web_static/releases/<archive filename without extension>
