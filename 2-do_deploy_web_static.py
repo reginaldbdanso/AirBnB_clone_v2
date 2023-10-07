@@ -2,7 +2,7 @@
 """Fabric script that distributes an archive to your web servers,
 using the function do_deploy
 """
-from fabric.api import env, put, run
+from fabric.api import env, put, run, local
 import os
 
 env.hosts = ['34.232.68.72', '52.90.13.69']
@@ -14,13 +14,13 @@ def do_deploy(archive_path):
     """Distributes an archive to the web servers"""
     if not os.path.exists(archive_path):
         return False
+    # print(archive_path)
 
     try:
         # Upload the archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
         # copy the archive to the tmp folder in the local machine
-        if local("cp {} /tmp/".format(archive_path)).failed is True:
-            return False
+        os.system("cp {} /tmp/".format(archive_path))
 
         # Uncompress the archive to the folder
         # /data/web_static/releases/<archive filename without extension>
@@ -30,6 +30,7 @@ def do_deploy(archive_path):
         file_name = archive_path.split("/")[-1]
         # get the folder name without the extension
         folder_name = file_name.split(".")[0]
+        # print(file_name, folder_name)
 
         def deploy_local(file_name, folder_name):
             local("mkdir -p /data/web_static/releases/{}/".format(folder_name))
@@ -55,10 +56,15 @@ def do_deploy(archive_path):
             local(
                 "ln -s /data/web_static/releases/{}/ /data/web_static/current"
                 .format(folder_name))
-            return true
-        
-        locallydep = do_deploy_local(file_name, folder_name)   
- 
+            print("[LOCAL] New version deployed!")
+            return True
+
+        if not os.path.exists("/data/web_static/releases/{}".format(
+                folder_name)):
+            locallydep = deploy_local(file_name, folder_name)
+        else:
+            locallydep = True
+
         if locallydep:
             run("mkdir -p /data/web_static/releases/{}/".format(folder_name))
             run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
@@ -83,8 +89,9 @@ def do_deploy(archive_path):
             run(
                 "ln -s /data/web_static/releases/{}/ /data/web_static/current"
                 .format(folder_name))
+            print("New version deployed!")
 
-        return True
+            return True
 
     except Exception as e:
         return False
