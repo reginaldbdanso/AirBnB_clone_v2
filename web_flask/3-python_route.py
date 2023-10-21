@@ -24,13 +24,19 @@ def c(text):
 
 
 @app.route(
-    '/python/<text>',
+    '/python/',
     defaults={'text': 'is cool'},
+    strict_slashes=False
+)
+@app.route(
+    '/python/<text>',
     strict_slashes=False
 )
 def python(text):
     """Display Python followed by the value
     of the text variable"""
+    if text is None:
+        abort(404)
     return 'Python {}'.format(text.replace('_', ' '))
 
 
