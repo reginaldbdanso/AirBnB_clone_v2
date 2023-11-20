@@ -57,8 +57,23 @@ def number_template(n):
     except Exception as e:
         abort(404)
 
-
-@app.route('/number_odd_or_even/<n>', strict_slashes=False)
+# airbnb-dynamic/number_odd_or_even/(any integer)
+# @app.route('/number_odd_or_even/<n>', strict_slashes=False)
+# def number_odd_or_even(n):
+#     """Display a HTML page only if n is an
+#     integer"""
+#     try:
+#         n = int(n)
+#         if n % 2 == 0:
+#             property = 'even'
+#         else:
+#             property = 'odd'
+#         data = {'n': n, 'property': property}
+#         return render_template('6-number_odd_or_even.html', data=data)
+#     except Exception as e:
+#         abort(404)
+@app.route('/airbnb-dynamic/number_odd_or_even/<int:n>',
+    strict_slashes=False)
 def number_odd_or_even(n):
     """Display a HTML page only if n is an
     integer"""
@@ -75,4 +90,4 @@ def number_odd_or_even(n):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
